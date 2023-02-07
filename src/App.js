@@ -26,11 +26,11 @@ function App() {
   const [message, setMessage] = useState("");
 
   const loadBlockchainData = async () => {
-    console.log(window.ethereum);
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     setProvider(provider);
 
     const network = await provider.getNetwork();
+
     const nft = new ethers.Contract(
       config[network.chainId].nft.address,
       NFT,
@@ -57,7 +57,7 @@ function App() {
     setMessage("Generate image ....");
 
     const URL =
-      "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2";
+      "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2-1";
 
     const response = await axios({
       url: URL,
@@ -104,14 +104,25 @@ function App() {
   };
 
   const mintImage = async (tokenURI) => {
-    setMessage("Waiting for mint .....");
+    try {
+      setMessage("Waiting for mint .....");
+      console.log("network", nft);
 
-    const signer = await provider.getSigner();
+      const signer = await provider.getSigner();
 
-    const tx = await nft
-      .connect(signer)
-      .mint(tokenURI, { value: ethers.utils.parseUnits("1", "ether") });
-    await tx.wait();
+      const tx = await nft
+        .connect(signer)
+        .mint(tokenURI, { value: ethers.utils.parseUnits("0.01", "ether") });
+      await tx.wait();
+    } catch (error) {
+      if (error.code == "ACTION_REJECTED") {
+        window.alert("Transaction Rejected");
+        setMessage("");
+        setIsWaiting(false);
+        setImage(null);
+        setUrl(null);
+      }
+    }
   };
 
   useEffect(() => {
