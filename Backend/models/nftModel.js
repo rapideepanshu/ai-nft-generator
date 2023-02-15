@@ -8,6 +8,8 @@ const nftSchema = new mongoose.Schema({
   description: String,
 
   owner: String,
+
+  image: String,
 });
 
 const nftModel = mongoose.model("NFTs", nftSchema);

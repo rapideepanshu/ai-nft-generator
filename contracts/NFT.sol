@@ -10,17 +10,12 @@ contract NFT is ERC721URIStorage {
     Counters.Counter private _tokenIds;
 
     address public owner;
-    uint256 public cost;
+    uint256 public cost = 10000000000000000;
 
     event nftMinted(uint256 tokenId, string tokenURI);
 
-    constructor(
-        string memory _name,
-        string memory _symbol,
-        uint256 _cost
-    ) ERC721(_name, _symbol) {
+    constructor() ERC721("AI NFT", "AINT") {
         owner = msg.sender;
-        cost = _cost;
     }
 
     function mint(string memory tokenURI) public payable {

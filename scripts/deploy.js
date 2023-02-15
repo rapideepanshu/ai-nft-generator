@@ -1,12 +1,8 @@
 const { ethers } = require("hardhat");
 
 async function main() {
-  const NAME = "AI Generated NFT";
-  const SYMBOL = "AINFT";
-  const COST = ethers.utils.parseUnits("0.01", "ether");
-
   const NFT = await ethers.getContractFactory("NFT");
-  const nft = await NFT.deploy(NAME, SYMBOL, COST);
+  const nft = await NFT.deploy();
   await nft.deployed();
 
   console.log(`Deployed NFT Contract at: ${nft.address}`);
